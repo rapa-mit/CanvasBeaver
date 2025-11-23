@@ -1,0 +1,31 @@
+# Gradebook cache files
+gradebook_*.pkl
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Session data
+.canvas_session.json
+
+# Generated reports and products
+individual-grades/
+grades_summary.csv
+anomaly_report.txt
+grades.html
+test_grade_report.xlsx
+
+# Old/backup files
+*~
+*.bak
+
+# User-specific configurations
+canvas.json
+
+# Password cache
+.canvas_email_password.pkl
+
+# IDE
+.vscode/
+.pytest_cache/

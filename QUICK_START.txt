@@ -1,0 +1,84 @@
+================================================================================
+QUICK START: Partial Semester Grading
+================================================================================
+
+WHAT IT DOES:
+-------------
+Computes grades based ONLY on assignments that have been graded (at least one
+student has a non-zero score). Excludes ungraded/unassigned work and normalizes
+weights proportionally.
+
+BASIC USAGE:
+------------
+1. Set Canvas token:
+   export CANVAS_TOKEN="your_canvas_api_token"
+
+2. Run grade processor (REQUIRED: must specify --config):
+   python3 process_grades.py --config grade_config_canvas.yaml
+
+3. Check output:
+   - Console shows which assignments are included
+   - individual-grades/*.txt contains per-student reports
+   - grades_summary.csv has the summary table
+   - anomaly_report.txt lists students with grade pattern alerts
+
+COMMAND-LINE OPTIONS:
+---------------------
+--config FILE           Config file (REQUIRED for drop_lowest to work)
+                        Recommended: grade_config_canvas.yaml
+--course-id ID          Canvas course ID (optional, will prompt if not given)
+--output-dir DIR        Output directory (default: current directory)
+--include-ungraded      Include ALL assignments (old behavior, treats ungraded as 0%)
+--include-inactive      Include inactive student enrollments
+
+EXAMPLES:
+---------
+# Partial semester grading (recommended):
+python3 process_grades.py --config grade_config_canvas.yaml
+
+# End of semester (include everything):
+python3 process_grades.py --config grade_config_canvas.yaml --include-ungraded
+
+# Specify course and output directory:
+python3 process_grades.py --course-id 33045 --config grade_config_canvas.yaml --output-dir ./reports
+
+# Test the logic without Canvas:
+python3 test_partial_grading.py
+
+WHAT TO EXPECT:
+---------------
+Console output will show:
+  "Partial semester grading: 18 of 28 assignments have been graded"
+  
+  For each assignment type:
+  "  Problem Sets: 9/13 graded, weight: 15.0% → 10.4%"
+  
+  Then normalization:
+  "Total partial weight: 51.3% (will normalize to 100%)"
+
+Individual reports will have:
+  "GRADE REPORT (PARTIAL SEMESTER - Based on graded assignments only)"
+  "CURRENT GRADE: 85.50% = B"
+  "(Based on work assigned and graded to date)"
+
+TROUBLESHOOTING:
+----------------
+Q: "Canvas access token required" error?
+A: Set CANVAS_TOKEN environment variable
+
+Q: All students still showing low grades?
+A: Check if assignments actually have non-zero scores in Canvas
+
+Q: Want old behavior?
+A: Use --include-ungraded flag
+
+Q: How do I know what's included?
+A: Check console output - it lists all graded assignments by type
+
+FOR MORE INFO:
+--------------
+- PARTIAL_GRADING_GUIDE.md  : Comprehensive guide with examples
+- REFACTORING_SUMMARY.md    : Technical details of changes
+- test_partial_grading.py   : Demo script showing the difference
+
+================================================================================

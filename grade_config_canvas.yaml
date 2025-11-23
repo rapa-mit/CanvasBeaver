@@ -1,0 +1,35 @@
+# Grade Processing Configuration (Using Canvas Assignment Groups)
+# ==================================================================
+#
+# This configuration uses assignment group weights defined in Canvas.
+# No need to redefine grade types - they're pulled from the Canvas API!
+
+# Use Canvas Assignment Groups
+# -----------------------------
+# When true, grade type weights are fetched from Canvas assignment groups
+# This is the recommended mode - avoids duplication and stays in sync with Canvas
+use_canvas_groups: true
+
+# Drop Lowest Grades
+# ------------------
+# Number of lowest grades to drop for each assignment group
+# Use the exact assignment group names from Canvas
+drop_lowest:
+  Problem Sets: 1      # Drop lowest problem set
+  Quizlets: 1          # Drop lowest quizlet
+  # Midterm: 0         # Don't drop midterm (default is 0)
+  # Final exam: 0      # Never drop final exam!
+
+# Letter Grade Scale (Optional)
+# ------------------------------
+# Path to custom letter grade scale YAML file
+# If not specified, uses MIT-letter-grades.yaml by default
+# letter_grade_scale: MIT-letter-grades.yaml
+# letter_grade_scale: strict-letter-grades.yaml
+
+# Notes:
+# ------
+# - Grade weights are taken from Canvas assignment group settings
+# - Make sure "Weighted by Group" is enabled in Canvas course settings
+# - Assignment group names in drop_lowest must exactly match Canvas names
+# - This configuration stays in sync with Canvas automatically

@@ -1,0 +1,54 @@
+# Grade Processing Configuration (Manual Mode - Legacy)
+# ======================================================
+#
+# This is the manual/legacy configuration mode where you explicitly define
+# grade type weights. This is useful if:
+# - Your Canvas course doesn't use assignment group weights
+# - You want to override Canvas weights for special calculations
+# - You're doing custom grading that differs from Canvas
+#
+# RECOMMENDED: Use grade_config_canvas.yaml instead to automatically
+# pull weights from Canvas assignment groups!
+
+# Use Manual Configuration
+# -------------------------
+use_canvas_groups: false
+
+# Grade Types and Weights
+# ------------------------
+# Define each grade type with its weight (as a decimal, not percentage)
+# Weights must sum to 1.0 (or less if allow_partial is true)
+# NOTE: Names must match Canvas assignment groups exactly (including plural!)
+grade_types:
+  Problem Sets: 0.15   # Use "Problem Sets" (plural) to match Canvas
+  Quizlets: 0.25       # Use "Quizlets" (plural) to match Canvas
+  Midterm: 0.25
+  Final exam: 0.35     # Use "Final exam" to match Canvas
+
+# Drop Lowest Grades
+# ------------------
+# Number of lowest grades to drop for each type
+# NOTE: Names must match Canvas assignment groups exactly (including plural!)
+drop_lowest:
+  Problem Sets: 1      # Use "Problem Sets" (plural) to match Canvas
+  Quizlets: 1          # Use "Quizlets" (plural) to match Canvas
+
+# Partial Semester Grading
+# -------------------------
+# Set to true for mid-semester grading when not all assignments exist yet
+# This allows weights to sum to less than 1.0
+allow_partial: false
+
+# Letter Grade Scale (Optional)
+# ------------------------------
+# Path to custom letter grade scale YAML file
+# If not specified, uses MIT-letter-grades.yaml by default
+# letter_grade_scale: MIT-letter-grades.yaml
+# letter_grade_scale: strict-letter-grades.yaml
+
+# Example: Mid-semester configuration (no final exam yet)
+# grade_types:
+#   Problem Sets: 0.15
+#   Quizlets: 0.25
+#   Midterm: 0.25
+# allow_partial: true

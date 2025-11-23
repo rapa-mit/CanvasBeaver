@@ -1,0 +1,33 @@
+# MIT Letter Grade Scale
+# ======================
+# 
+# Defines the mapping from numerical percentages to letter grades.
+# Each entry specifies a threshold (as a percentage, 0.0-1.0) and the corresponding letter grade.
+# Grades are assigned by finding the highest threshold that the student's percentage meets or exceeds.
+#
+# Default scale is based on MIT's 5.0 grading system:
+# - 5.0 = 100% (perfect)
+# - 4.0 = 80% (solid B-level work)
+# - 3.0 = 60% (minimal passing)
+#
+# Format: Each entry is "threshold: letter_grade"
+# Thresholds should be in ascending order.
+
+scale:
+  0.00: F      # 0% to < 61%
+  0.61: D      # 61% to < 70%
+  0.70: C-     # 70% to < 74%
+  0.74: C      # 74% to < 77%
+  0.77: C+     # 77% to < 80%
+  0.80: B-     # 80% to < 84%
+  0.84: B      # 84% to < 87%
+  0.87: B+     # 87% to < 90%
+  0.90: A-     # 90% to < 94%
+  0.94: A      # 94% to < 97%
+  0.97: A+     # 97% to 100%
+
+# Notes:
+# - These thresholds correspond to the traditional MIT 5.0 scale
+# - The grading is relatively generous to encourage learning
+# - A+ typically requires near-perfect performance (97%+)
+# - You can customize this scale for different courses or departments
