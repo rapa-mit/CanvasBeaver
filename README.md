@@ -73,62 +73,41 @@ This generates:
 
 ### Getting Started
 - **[QUICK_START.txt](QUICK_START.txt)** - Quick start guide with step-by-step instructions for first-time setup and basic usage
-- **[README.md](README.md)** - This file - overview and reference
 
-### Grade Processing
-- **[GRADE_PROCESSING.md](GRADE_PROCESSING.md)** - Complete grade processing documentation including:
-  - Canvas API integration details
-  - Configuration options and examples
-  - Weight calculation methods
-  - Drop-lowest implementation
-  - Anomaly detection algorithms
-  - Output formats
+### Core Documentation
+
+- **[GRADE_PROCESSING.md](GRADE_PROCESSING.md)** - Complete grade processing documentation:
+  - Canvas API integration and configuration
+  - Weight calculation methods (Canvas groups vs. manual)
+  - Drop-lowest grades by category with examples
+  - Anomaly detection algorithms and interpretation
+  - Configuration file format and options
+  - Output formats (CSV, text, Excel)
+  - Command-line usage and examples
   
-- **[PARTIAL_GRADING_GUIDE.md](PARTIAL_GRADING_GUIDE.md)** - Mid-semester grading guide covering:
-  - Handling incomplete assignment sets
-  - Weight normalization for partial semesters
+- **[PARTIAL_GRADING_GUIDE.md](PARTIAL_GRADING_GUIDE.md)** - Mid-semester grading:
+  - How partial semester grading works
+  - Weight normalization explained with examples
   - Configuration for graded-only assignments
-  - Interpreting normalized grades
+  - Interpreting normalized vs. raw grades
+  - When to use partial grading mode
   
-- **[DROP_LOWEST_UPDATE.md](DROP_LOWEST_UPDATE.md)** - Drop-lowest feature documentation:
-  - How drop-lowest works by category
-  - Configuration examples
-  - Edge cases and limitations
-  - Impact on grade calculations
-  
-- **[SIMPLIFIED_CALCULATION.md](SIMPLIFIED_CALCULATION.md)** - Grade calculation overview:
-  - Step-by-step calculation walkthrough
-  - Examples with real numbers
-  - Formula explanations
-  - Troubleshooting common issues
-
-### Email System
-- **[EMAIL_SETUP.md](EMAIL_SETUP.md)** - Complete email configuration and usage guide including:
-  - SMTP configuration (Gmail, MIT, custom servers)
-  - Password caching and security
-  - Email body customization
-  - Testing and dry-run modes
-  - Troubleshooting common email issues
+- **[EMAIL_SETUP.md](EMAIL_SETUP.md)** - Email distribution system:
+  - SMTP configuration for different providers (Gmail, MIT, custom)
+  - Password caching with secure storage
+  - Email body format and customization
   - Excel attachment handling
+  - Testing modes (dry-run, test-email)
+  - Troubleshooting common issues
+  - Security best practices
 
-### Technical Details
-- **[CACHING_FEATURE.md](CACHING_FEATURE.md)** - Gradebook caching system:
-  - Cache file format and location
-  - Cache invalidation strategies
-  - Performance benefits
-  - Manual cache management
-  
-- **[REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md)** - Code architecture and design decisions:
-  - Module structure
-  - API design patterns
-  - Refactoring history
-  - Extension points
-  
-- **[FINAL_SUMMARY.md](FINAL_SUMMARY.md)** - System overview and feature summary:
-  - Complete feature list
-  - System architecture
-  - Data flow
-  - Integration points
+### Technical Documentation
+- **[CACHING_FEATURE.md](CACHING_FEATURE.md)** - Gradebook caching:
+  - How caching works and performance benefits
+  - Cache file format (.pkl) and location
+  - Cache invalidation and refresh strategies
+  - Manual cache management commands
+  - When to use `--no-cache` option
 
 ## Configuration Files
 
