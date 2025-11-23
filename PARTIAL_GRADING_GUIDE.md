@@ -29,27 +29,42 @@ For example, if you have:
 - Problem Set #7: All students have 0.00 → **NOT GRADED** (excluded)
 - Final Exam: All students have 0.00 → **NOT GRADED** (excluded)
 
-### Weight Recalculation
-The processor automatically recalculates weights proportionally:
+### Weight Normalization (Simplified Approach)
+
+The processor uses a **category-level** approach:
+
+1. **If a category has ANY graded assignments** → Use the FULL category weight
+2. **If a category has NO graded assignments** → Exclude the entire category
+3. **Normalize remaining weights** to 100%
+
+**The number of graded assignments within a category doesn't affect the weight** - only whether the category has any graded work at all.
+
+#### Example
 
 **Original weights:**
-- Problem Sets: 15% (total, all 13 assignments)
-- Quizlets: 25% (total, all 11 quizzes)
+- Problem Sets: 15%
+- Quizlets: 25%
 - Midterm: 25%
 - Final: 35%
 
-**If 9/13 Problem Sets graded, 7/11 Quizlets graded, Midterm graded, Final not graded:**
-- Problem Sets: 15% × (9/13) = 10.4%
-- Quizlets: 25% × (7/11) = 15.9%
-- Midterm: 25% × (1/1) = 25%
-- Final: 35% × (0/1) = 0%
-- **Subtotal: 51.3%**
+**Scenario: Final not yet graded, others have graded work**
 
-Then normalize to 100%:
-- Problem Sets: 10.4% / 0.513 = 20.3%
-- Quizlets: 15.9% / 0.513 = 31.0%
-- Midterm: 25% / 0.513 = 48.7%
+Step 1: Identify categories with graded work
+- Problem Sets: ✓ Has graded assignments → Keep 15%
+- Quizlets: ✓ Has graded assignments → Keep 25%
+- Midterm: ✓ Has graded assignments → Keep 25%
+- Final: ✗ No graded assignments → Exclude (0%)
+
+Step 2: Sum active category weights
+- Total: 15% + 25% + 25% = 65%
+
+Step 3: Normalize to 100%
+- Problem Sets: 15% ÷ 0.65 = **23.08%**
+- Quizlets: 25% ÷ 0.65 = **38.46%**
+- Midterm: 25% ÷ 0.65 = **38.46%**
 - **Total: 100%**
+
+Within each category, the grade is the **average of all graded assignments** in that category (after drop-lowest is applied).
 
 ## Usage
 
@@ -96,13 +111,16 @@ CURRENT GRADE: 85.50% = B
 The processor prints information about what's being included:
 
 ```
-Partial semester grading: 18 of 28 assignments have been graded
-  Problem Sets: 9/13 graded, weight: 15.0% → 10.4%
-  Quizlets: 7/11 graded, weight: 25.0% → 15.9%
-  Midterm: 1/1 graded, weight: 25.0% → 25.0%
-  Final exam: 0/1 graded, weight: 35.0% → 0.0%
+Partial semester grading: 17 of 28 assignments have been graded
 
-Total partial weight: 51.3% (will normalize to 100%)
+Categories with graded assignments:
+  Final exam: weight = 35.0% (NO GRADED WORK - excluded)
+  Midterm: weight = 25.0%
+  Problem Sets: weight = 15.0%
+  Quizlets: weight = 25.0%
+
+Total weight of graded categories: 65.0%
+Will normalize to 100%
 ```
 
 ### CSV Reports
@@ -127,7 +145,7 @@ The CSV reports show current grades based on graded work only.
 Drop lowest is applied AFTER filtering to graded assignments:
 - Only graded assignments in each category are considered
 - Lowest is dropped from the graded set
-- Weights are recalculated based on remaining graded assignments
+- Category weight remains the same (full weight) as long as the category has graded work
 
 ### Anomaly Detection
 Anomaly detection still works and uses only graded assignments for pattern analysis.
