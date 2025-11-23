@@ -35,13 +35,35 @@ export CANVAS_TOKEN="<your token here>"
 
 ### 2. Process Grades
 ```bash
+# Basic usage (recommended for mid-semester)
 python3 process_grades.py --config grade_config_canvas.yaml
+
+# Specify course ID explicitly
+python3 process_grades.py --config grade_config_canvas.yaml --course-id XXXXX
+
+# End of semester (include all assignments, even ungraded)
+python3 process_grades.py --config grade_config_canvas.yaml --include-ungraded
+
+# Custom output directory
+python3 process_grades.py --config grade_config_canvas.yaml --output-dir ./reports
+
+# Force fresh download (skip cache)
+python3 process_grades.py --config grade_config_canvas.yaml --no-cache
 ```
 
-This generates:
+**Options:**
+- `--config FILE` - Configuration YAML file (required)
+- `--course-id ID` - Canvas course ID (interactive if not specified)
+- `--include-ungraded` - Include ungraded assignments (default: only graded)
+- `--include-inactive` - Include inactive student enrollments
+- `--output-dir DIR` - Output directory (default: current directory)
+- `--no-cache` - Skip cache, download fresh from Canvas
+
+**Generates:**
 - Individual text reports (`individual-grades/*.txt`)
 - Individual Excel spreadsheets with formulas (`individual-grades/*.xlsx`)
 - Summary CSV (`grades_summary.csv`)
+- Anomaly report (`anomaly_report.txt`)
 
 ### 3. Email Grades to Students
 ```bash

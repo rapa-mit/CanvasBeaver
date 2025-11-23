@@ -23,28 +23,40 @@ BASIC USAGE:
    - grades_summary.csv has the summary table
    - anomaly_report.txt lists students with grade pattern alerts
 
-COMMAND-LINE OPTIONS:
----------------------
---config FILE           Config file (REQUIRED for drop_lowest to work)
+COMMAND-LINE OPTIONS (process_grades.py):
+-----------------------------------------
+--config FILE           Configuration YAML file (REQUIRED)
                         Recommended: grade_config_canvas.yaml
---course-id ID          Canvas course ID (optional, will prompt if not given)
---output-dir DIR        Output directory (default: current directory)
---include-ungraded      Include ALL assignments (old behavior, treats ungraded as 0%)
+--course-id ID          Canvas course ID (will prompt if not given)
+--include-ungraded      Include ALL assignments, even ungraded (treats as 0%)
+                        Default: only count graded assignments
 --include-inactive      Include inactive student enrollments
+--output-dir DIR        Output directory (default: current directory)
+--no-cache              Skip cache, download fresh from Canvas
 
 EXAMPLES:
 ---------
-# Partial semester grading (recommended):
+# Partial semester grading (recommended - only graded work):
 python3 process_grades.py --config grade_config_canvas.yaml
 
-# End of semester (include everything):
+# End of semester (include everything, even ungraded):
 python3 process_grades.py --config grade_config_canvas.yaml --include-ungraded
 
 # Specify course and output directory:
-python3 process_grades.py --course-id 33045 --config grade_config_canvas.yaml --output-dir ./reports
+python3 process_grades.py --config grade_config_canvas.yaml --course-id 33045 --output-dir ./reports
 
-# Test the logic without Canvas:
-python3 test_partial_grading.py
+# Force fresh download (skip cache):
+python3 process_grades.py --config grade_config_canvas.yaml --no-cache
+
+# Include inactive students:
+python3 process_grades.py --config grade_config_canvas.yaml --include-inactive
+
+OUTPUT FILES:
+-------------
+- individual-grades/*.txt   - Text reports for each student
+- individual-grades/*.xlsx  - Excel files with formulas for each student
+- grades_summary.csv        - Summary table of all students
+- anomaly_report.txt        - Students with unusual grade patterns
 
 EMAIL GRADES TO STUDENTS:
 -------------------------
