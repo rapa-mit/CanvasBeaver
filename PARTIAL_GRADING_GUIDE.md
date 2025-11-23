@@ -1,8 +1,8 @@
-# Partial Semester Grading Guide
+# Canvas Beaver - Partial Semester Grading Guide
 
 ## Overview
 
-The grade processor has been refactored to compute grades based **only on graded assignments** by default. This provides accurate "current grade" calculations that reflect students' performance on completed work, without being dragged down by unassigned or ungraded assignments.
+Canvas Beaver computes grades based **only on graded assignments** by default. This provides accurate "current grade" calculations that reflect students' performance on completed work, without being dragged down by unassigned or ungraded assignments.
 
 ## What Changed
 

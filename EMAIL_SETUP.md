@@ -1,8 +1,8 @@
-# Email Grade Reports Setup
+# Canvas Beaver - Email Grade Reports Setup
 
 ## Overview
 
-The `email_grades.py` script sends individual grade reports to students via email. It retrieves student email addresses from the Canvas API and attaches their personalized grade report files.
+Canvas Beaver's email system sends individual grade reports to students via email. It retrieves student email addresses from the Canvas API and attaches their personalized grade report files with interactive Excel spreadsheets.
 
 ## Prerequisites
 

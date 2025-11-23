@@ -1,4 +1,6 @@
-# Canvas Grade Processor & Email System
+# Canvas Beaver
+
+**Building Better Grade Reports**
 
 A comprehensive Python toolkit for processing Canvas gradebook data with advanced features for grade computation, Excel report generation, and automated email distribution to students.
 

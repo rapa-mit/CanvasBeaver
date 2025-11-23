@@ -1,8 +1,8 @@
-# Gradebook Caching Feature
+# Canvas Beaver - Gradebook Caching
 
 ## Overview
 
-The grade processor now automatically caches gradebook data to speed up repeated runs. No more waiting for Canvas API downloads every time!
+Canvas Beaver automatically caches gradebook data to speed up repeated runs. No more waiting for Canvas API downloads every time!
 
 ## How It Works
 

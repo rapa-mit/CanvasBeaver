@@ -1,6 +1,6 @@
-# Advanced Grade Processing Guide
+# Canvas Beaver - Grade Processing Guide
 
-This guide explains how to use the sophisticated grade processing system that replaces CSV-based workflows with direct Canvas API queries.
+This guide explains how to use Canvas Beaver's sophisticated grade processing system that replaces CSV-based workflows with direct Canvas API queries.
 
 ## Quick Start
 

@@ -1,6 +1,7 @@
 ================================================================================
-QUICK START: Partial Semester Grading
+Canvas Beaver - Quick Start Guide
 ================================================================================
+Building Better Grade Reports
 
 WHAT IT DOES:
 -------------
