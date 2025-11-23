@@ -14,6 +14,17 @@ This toolkit provides a complete grade management system:
 - Detect anomalies and grade patterns
 - Export results in various formats
 
+## Installation
+
+```bash
+# Clone the repository
+git clone git@github.com:rapa-mit/CanvasBeaver.git
+cd CanvasBeaver
+
+# Install dependencies
+pip install canvasapi openpyxl pyyaml
+```
+
 ## Quick Start
 
 ### 1. Set Up Canvas API Access

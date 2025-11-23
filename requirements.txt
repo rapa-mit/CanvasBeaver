@@ -1,0 +1,10 @@
+# Canvas Beaver - Python dependencies
+
+# Canvas API client
+canvasapi>=3.0.0
+
+# Excel file generation
+openpyxl>=3.0.0
+
+# YAML configuration parsing
+pyyaml>=6.0
