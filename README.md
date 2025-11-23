@@ -45,15 +45,26 @@ This generates:
 
 ### 3. Email Grades to Students
 ```bash
-# Test first (doesn't actually send)
-./email_grades.py --course-id XXXXX --dry-run
+# Test email configuration first
+./email_grades.py --test-config
+
+# Preview what will be sent (dry run)
+./email_grades.py --dry-run
 
 # Send to yourself to verify
-./email_grades.py --course-id XXXXX --test-email your@email.com
+./email_grades.py --test-email your@email.com
 
 # Send to all students
+./email_grades.py
+
+# Specify course ID explicitly
 ./email_grades.py --course-id XXXXX
 ```
+
+**Note:** The script will prompt you for:
+- Course selection (if not specified with `--course-id`)
+- SMTP password (cached securely after first use)
+- Confirmation before sending
 
 ## Key Features
 
@@ -187,15 +198,17 @@ python3 process_grades.py --config grade_config_canvas.yaml
 # 2. Test email configuration
 ./email_grades.py --test-config
 
-# 3. Preview what will be sent (dry run)
-./email_grades.py --course-id 33045 --dry-run
+# 3. Preview what will be sent (dry run - no course ID needed)
+./email_grades.py --dry-run
 
 # 4. Send to yourself first
-./email_grades.py --course-id 33045 --test-email your@email.com
+./email_grades.py --test-email your@email.com
 
 # 5. Send to all students
-./email_grades.py --course-id 33045
+./email_grades.py
 ```
+
+**Note:** Course selection is interactive if `--course-id` is not specified.
 
 ## License
 

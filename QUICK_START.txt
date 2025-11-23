@@ -46,6 +46,43 @@ python3 process_grades.py --course-id 33045 --config grade_config_canvas.yaml --
 # Test the logic without Canvas:
 python3 test_partial_grading.py
 
+EMAIL GRADES TO STUDENTS:
+-------------------------
+After processing grades, email them to students:
+
+1. Test email configuration:
+   ./email_grades.py --test-config
+
+2. Preview what will be sent (dry run):
+   ./email_grades.py --dry-run
+
+3. Send to yourself first:
+   ./email_grades.py --test-email your@email.com
+
+4. Send to all students:
+   ./email_grades.py
+
+EMAIL OPTIONS:
+--------------
+--test-config           Test SMTP configuration with a test email
+--dry-run               Show what would be sent without actually sending
+--test-email EMAIL      Send all emails to this address instead of students
+--course-id ID          Canvas course ID (will prompt if not given)
+--reports-dir DIR       Directory with grade reports (default: individual-grades)
+--subject SUBJECT       Email subject line
+--smtp-server SERVER    SMTP server (default: from config or env)
+--smtp-port PORT        SMTP port (default: 465)
+--smtp-user USER        SMTP username (default: from config or env)
+--no-tls                Disable TLS encryption
+--no-cache              Download fresh data from Canvas
+
+The script will:
+- Retrieve student emails from Canvas API
+- Attach Excel files with interactive grade formulas
+- Inline text reports in email body
+- Securely cache SMTP password (asks once, remembers)
+- Prompt for confirmation before sending
+
 WHAT TO EXPECT:
 ---------------
 Console output will show:
