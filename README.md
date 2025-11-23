@@ -72,22 +72,63 @@ This generates:
 ## Documentation
 
 ### Getting Started
-- [QUICK_START.txt](QUICK_START.txt) - Step-by-step getting started guide
-- [README.md](README.md) - This file
+- **[QUICK_START.txt](QUICK_START.txt)** - Quick start guide with step-by-step instructions for first-time setup and basic usage
+- **[README.md](README.md)** - This file - overview and reference
 
 ### Grade Processing
-- [GRADE_PROCESSING.md](GRADE_PROCESSING.md) - Detailed grade processing documentation
-- [PARTIAL_GRADING_GUIDE.md](PARTIAL_GRADING_GUIDE.md) - Mid-semester grading guide
-- [DROP_LOWEST_UPDATE.md](DROP_LOWEST_UPDATE.md) - Drop-lowest feature guide
-- [SIMPLIFIED_CALCULATION.md](SIMPLIFIED_CALCULATION.md) - Grade calculation overview
+- **[GRADE_PROCESSING.md](GRADE_PROCESSING.md)** - Complete grade processing documentation including:
+  - Canvas API integration details
+  - Configuration options and examples
+  - Weight calculation methods
+  - Drop-lowest implementation
+  - Anomaly detection algorithms
+  - Output formats
+  
+- **[PARTIAL_GRADING_GUIDE.md](PARTIAL_GRADING_GUIDE.md)** - Mid-semester grading guide covering:
+  - Handling incomplete assignment sets
+  - Weight normalization for partial semesters
+  - Configuration for graded-only assignments
+  - Interpreting normalized grades
+  
+- **[DROP_LOWEST_UPDATE.md](DROP_LOWEST_UPDATE.md)** - Drop-lowest feature documentation:
+  - How drop-lowest works by category
+  - Configuration examples
+  - Edge cases and limitations
+  - Impact on grade calculations
+  
+- **[SIMPLIFIED_CALCULATION.md](SIMPLIFIED_CALCULATION.md)** - Grade calculation overview:
+  - Step-by-step calculation walkthrough
+  - Examples with real numbers
+  - Formula explanations
+  - Troubleshooting common issues
 
 ### Email System
-- [EMAIL_SETUP.md](EMAIL_SETUP.md) - Complete email configuration and usage guide
+- **[EMAIL_SETUP.md](EMAIL_SETUP.md)** - Complete email configuration and usage guide including:
+  - SMTP configuration (Gmail, MIT, custom servers)
+  - Password caching and security
+  - Email body customization
+  - Testing and dry-run modes
+  - Troubleshooting common email issues
+  - Excel attachment handling
 
 ### Technical Details
-- [CACHING_FEATURE.md](CACHING_FEATURE.md) - Gradebook caching documentation
-- [REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md) - Code architecture notes
-- [FINAL_SUMMARY.md](FINAL_SUMMARY.md) - System overview
+- **[CACHING_FEATURE.md](CACHING_FEATURE.md)** - Gradebook caching system:
+  - Cache file format and location
+  - Cache invalidation strategies
+  - Performance benefits
+  - Manual cache management
+  
+- **[REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md)** - Code architecture and design decisions:
+  - Module structure
+  - API design patterns
+  - Refactoring history
+  - Extension points
+  
+- **[FINAL_SUMMARY.md](FINAL_SUMMARY.md)** - System overview and feature summary:
+  - Complete feature list
+  - System architecture
+  - Data flow
+  - Integration points
 
 ## Configuration Files
 
