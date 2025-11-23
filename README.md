@@ -168,17 +168,81 @@ python3 process_grades.py --config grade_config_canvas.yaml --no-cache
 ## Main Scripts
 
 ### Core Processing
-- `process_grades.py` - Main grade processing script
-- `email_grades.py` - Email distribution script
+
+**`process_grades.py`** - Main grade processing script
+```bash
+python3 process_grades.py --config grade_config_canvas.yaml [OPTIONS]
+
+Options:
+  --config FILE           Configuration YAML file (required)
+  --course-id ID          Canvas course ID (interactive if omitted)
+  --include-ungraded      Include all assignments, even ungraded
+  --include-inactive      Include inactive student enrollments
+  --output-dir DIR        Output directory (default: current directory)
+  --no-cache              Skip cache, download fresh from Canvas
+```
+
+**`email_grades.py`** - Email distribution script
+```bash
+./email_grades.py [OPTIONS]
+
+Options:
+  --test-config           Test SMTP configuration
+  --dry-run               Show what would be sent without sending
+  --test-email EMAIL      Send all emails to this address instead
+  --course-id ID          Canvas course ID (interactive if omitted)
+  --reports-dir DIR       Directory with grade reports (default: individual-grades)
+  --subject SUBJECT       Email subject line
+  --from-email EMAIL      Sender email address
+  --smtp-server HOST      SMTP server hostname
+  --smtp-port PORT        SMTP port (default: 465)
+  --smtp-user USER        SMTP username
+  --smtp-password PASS    SMTP password
+  --no-tls                Disable TLS encryption
+  --no-cache              Skip cache, download fresh from Canvas
+```
 
 ### Utilities
-- `list_courses.py` - List available Canvas courses
-- `list_assignments.py` - Show assignments for a course
-- `print_roster.py` - Display course roster
-- `analyze_grades.py` - Grade analysis tools
-- `diagnose_assignments.py` - Assignment debugging
+
+**`list_courses.py`** - List available Canvas courses
+```bash
+python3 list_courses.py
+```
+Shows all active courses with IDs and enrollment info.
+
+**`list_assignments.py`** - Show assignments for a course
+```bash
+python3 list_assignments.py [--course-id ID]
+```
+Lists all assignments with groups, points, and due dates.
+
+**`print_roster.py`** - Display course roster
+```bash
+python3 print_roster.py [--course-id ID] [--include-inactive]
+
+Options:
+  --course-id ID          Canvas course ID (interactive if omitted)
+  --include-inactive      Include inactive enrollments
+```
+
+**`analyze_grades.py`** - Grade analysis tools
+```bash
+python3 analyze_grades.py [--course-id ID] [--student-id ID] [--include-inactive]
+
+Options:
+  --course-id ID          Canvas course ID (interactive if omitted)
+  --student-id ID         Show details for specific student
+  --include-inactive      Include inactive enrollments
+```
+
+**`diagnose_assignments.py`** - Assignment debugging
+```bash
+python3 diagnose_assignments.py
+```
+Helps diagnose assignment detection and grading issues.
 
 ### Testing
+
 - `test_grades.py` - Grade computation tests
 - `test_drop_lowest.py` - Drop-lowest feature tests
 - `test_partial_grading.py` - Partial semester tests
