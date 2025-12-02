@@ -11,13 +11,22 @@ weights proportionally.
 
 BASIC USAGE:
 ------------
-1. Set Canvas token:
+1. Get your Canvas API token:
+   a. Log in to Canvas (e.g., https://canvas.mit.edu)
+   b. Go to Account → Settings
+   c. Scroll to "Approved Integrations"
+   d. Click "+ New Access Token"
+   e. Give it a name (e.g., "Grade Processing")
+   f. Click "Generate Token"
+   g. Copy the token immediately (shown only once!)
+
+2. Set Canvas token:
    export CANVAS_TOKEN="your_canvas_api_token"
 
-2. Run grade processor (REQUIRED: must specify --config):
+3. Run grade processor (REQUIRED: must specify --config):
    python3 process_grades.py --config grade_config_canvas.yaml
 
-3. Check output:
+4. Check output:
    - Console shows which assignments are included
    - individual-grades/*.txt contains per-student reports
    - grades_summary.csv has the summary table
@@ -114,7 +123,8 @@ Individual reports will have:
 TROUBLESHOOTING:
 ----------------
 Q: "Canvas access token required" error?
-A: Set CANVAS_TOKEN environment variable
+A: Get a token from Canvas (Account → Settings → New Access Token)
+   Then set: export CANVAS_TOKEN="your_token"
 
 Q: All students still showing low grades?
 A: Check if assignments actually have non-zero scores in Canvas

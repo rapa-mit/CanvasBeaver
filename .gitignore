@@ -21,7 +21,7 @@ test_grade_report.xlsx
 *.bak
 
 # User-specific configurations
-canvas.json
+canvas-token.json
 
 # Password cache
 .canvas_email_password.pkl

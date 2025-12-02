@@ -608,6 +608,12 @@ This report shows your current standing based on graded assignments completed so
 
 Best regards
 
+────────────────────────
+IMPORTANT DISCLAIMER:
+
+I want to clarify once again that this is just for the purpose of giving you an idea of how to compute your grade based on the work done so far. The percentage and the letter grade is not a predictor of your final course grade, as it's missing a large part of the grade (final %35%, and several ungraded or unassigned psets, labs and quizlets). The computation of your current grade is done by normalizing the scores you have obtained with the maximum score possible in all the work graded so far.
+────────────────────────
+
 {'='*70}
 
 {report_content}

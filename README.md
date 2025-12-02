@@ -28,10 +28,43 @@ pip install canvasapi openpyxl pyyaml
 ## Quick Start
 
 ### 1. Set Up Canvas API Access
-Create `canvas.json` with your Canvas credentials or export your API token:
-```bash
-export CANVAS_TOKEN="<your token here>"
-```
+
+#### Obtaining Your Canvas API Token
+
+To use this toolkit, you need a Canvas API access token. Here's how to get one:
+
+1. **Log in to Canvas** at your institution's Canvas URL (e.g., `https://canvas.mit.edu`)
+
+2. **Navigate to Account Settings**:
+   - Click on "Account" in the left navigation menu
+   - Select "Settings" from the dropdown
+
+3. **Generate a New Access Token**:
+   - Scroll down to the "Approved Integrations" section
+   - Click the "+ New Access Token" button
+   - Give your token a purpose/name (e.g., "Grade Processing Tool")
+   - (Optional) Set an expiration date for security
+   - Click "Generate Token"
+
+4. **Copy Your Token**:
+   - Canvas will display your token **only once**
+   - Copy it immediately and store it securely
+   - ⚠️ **Important:** You won't be able to see this token again. If you lose it, you'll need to generate a new one.
+
+5. **Configure the Token**:
+   
+   The toolkit will automatically prompt you for your token the first time you run any command. It will then save it to `canvas-token.json` for future use.
+   
+   Alternatively, you can create `canvas-token.json` manually:
+   ```json
+   {
+     "api_url": "https://canvas.mit.edu",
+     "api_key": "your_token_here"
+   }
+   ```
+   ⚠️ **Security:** Never commit `canvas-token.json` to version control!
+
+**Note:** The token provides access to your Canvas account data. Keep it secure and never share it publicly.
 
 ### 2. Process Grades
 ```bash
@@ -269,7 +302,7 @@ The `canvas/` directory contains the core library:
 
 ## Security Notes
 
-- Never commit `canvas.json` (contains API credentials)
+- Never commit `canvas-token.json` (contains API credentials)
 - Never commit `.canvas_session.json` (contains session data)
 - Password caching uses secure file permissions (0600)
 - Use environment variables for sensitive SMTP credentials
