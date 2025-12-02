@@ -70,10 +70,42 @@ To use this toolkit, you need a Canvas API access token. Here's how to get one:
 
 **Note:** The token provides access to your Canvas account data. Keep it secure and never share it publicly.
 
-### 2. Process Grades
+### 2. Configuration Setup
+
+You have several options for configuration:
+
+#### Option A: Auto-Config (No YAML needed!)
 ```bash
-# Basic usage (recommended for mid-semester)
+# Simplest - auto-detect everything from Canvas
+python3 process_grades.py --auto-config
+
+# Auto-detect with Canvas drop rules (if configured in Canvas)
+python3 process_grades.py --auto-config --course-id XXXXX
+```
+
+#### Option B: Generate Config File
+```bash
+# Generate config file from Canvas (then edit drop_lowest as needed)
+python3 generate_config.py --interactive
+
+# Or use shortcut from process_grades
+python3 process_grades.py --generate-config
+```
+
+#### Option C: Use Existing Config File
+```bash
+# Use pre-configured YAML file
 python3 process_grades.py --config grade_config_canvas.yaml
+```
+
+### 3. Process Grades
+
+```bash
+# Basic usage with config file
+python3 process_grades.py --config grade_config_canvas.yaml
+
+# Or use auto-config (no YAML needed)
+python3 process_grades.py --auto-config
 
 # Specify course ID explicitly
 python3 process_grades.py --config grade_config_canvas.yaml --course-id XXXXX
@@ -89,7 +121,9 @@ python3 process_grades.py --config grade_config_canvas.yaml --no-cache
 ```
 
 **Options:**
-- `--config FILE` - Configuration YAML file (required)
+- `--config FILE` - Configuration YAML file (optional with --auto-config)
+- `--auto-config` - Auto-detect configuration from Canvas (no YAML needed)
+- `--generate-config` - Generate config file and exit
 - `--course-id ID` - Canvas course ID (interactive if not specified)
 - `--include-ungraded` - Include ungraded assignments (default: only graded)
 - `--include-inactive` - Include inactive student enrollments
@@ -102,7 +136,7 @@ python3 process_grades.py --config grade_config_canvas.yaml --no-cache
 - Summary CSV (`{course}-{date}/grades_summary.csv`)
 - Anomaly report (`{course}-{date}/anomaly_report.txt`)
 
-### 3. Email Grades to Students
+### 4. Email Grades to Students
 ```bash
 # Test email configuration first
 python3 email_grades.py --test-config
@@ -130,11 +164,35 @@ python3 email_grades.py --reports-dir ./custom-reports/individual-grades
 
 By default, `email_grades.py` automatically looks for reports in `{course}-{date}/individual-grades`.
 
+## Configuration Modes
+
+### Auto-Config Mode (Recommended)
+Use `--auto-config` for zero-configuration setup:
+- Automatically fetches assignment groups and weights from Canvas
+- Auto-detects drop rules if configured in Canvas
+- No YAML file needed
+- Perfect for simple use cases
+
+### Generated Config Mode
+Use `generate_config.py` or `--generate-config`:
+- Scans Canvas and creates a YAML template
+- Optionally prompts for drop_lowest values (--interactive)
+- Edit the generated file to customize
+- Provides full control over drop rules
+
+### Manual Config Mode
+Create your own YAML file:
+- Full control over all settings
+- Can override Canvas weights
+- Useful for complex grading scenarios
+- See `grade_config_example.yaml` for template
+
 ## Key Features
 
 ### Grade Processing
 - **Direct Canvas API integration** - No CSV exports needed
-- **Configurable grade weights** - Flexible category weighting
+- **Auto-configuration** - Works with or without YAML files
+- **Configurable grade weights** - Pulled from Canvas or manual
 - **Drop lowest grades** - By category (e.g., drop 1 quiz)
 - **Partial semester grading** - Handles mid-semester with normalization
 - **Letter grade computation** - Configurable grade scales
@@ -202,6 +260,7 @@ By default, `email_grades.py` automatically looks for reports in `{course}-{date
 ### Grade Configuration
 - `grade_config_canvas.yaml` - Production grade configuration
 - `grade_config_example.yaml` - Template for custom configurations
+- `CONFIGURATION_GUIDE.md` - **Complete configuration guide** (recommended reading)
 
 ### Letter Grade Scales
 - `MIT-letter-grades.yaml` - MIT 5.0 scale (default)
@@ -211,16 +270,37 @@ By default, `email_grades.py` automatically looks for reports in `{course}-{date
 
 ### Core Processing
 
+**`generate_config.py`** - Generate configuration from Canvas
+```bash
+# Interactive mode - prompts for drop_lowest values
+python3 generate_config.py --interactive
+
+# Non-interactive - creates template to edit
+python3 generate_config.py --course-id 33045
+
+Options:
+  --course-id ID          Canvas course ID (interactive if omitted)
+  --output FILE           Output YAML file
+  --interactive           Prompt for drop_lowest values
+  --force                 Overwrite existing config file
+```
+
 **`process_grades.py`** - Main grade processing script
 ```bash
+# With auto-config (no YAML needed)
+python3 process_grades.py --auto-config
+
+# With config file
 python3 process_grades.py --config grade_config_canvas.yaml [OPTIONS]
 
 Options:
-  --config FILE           Configuration YAML file (required)
+  --config FILE           Configuration YAML file (optional with --auto-config)
+  --auto-config           Auto-detect config from Canvas (no YAML needed)
+  --generate-config       Generate config file and exit
   --course-id ID          Canvas course ID (interactive if omitted)
   --include-ungraded      Include all assignments, even ungraded
   --include-inactive      Include inactive student enrollments
-  --output-dir DIR        Output directory (default: current directory)
+  --output-dir DIR        Output directory (default: {course}-{date})
   --no-cache              Skip cache, download fresh from Canvas
 ```
 

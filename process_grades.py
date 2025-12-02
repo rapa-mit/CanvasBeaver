@@ -160,24 +160,48 @@ def print_grade_list(processor: GradeProcessor, sort_by: str = 'name') -> None:
 def main():
     parser = argparse.ArgumentParser(description="Process Canvas course grades")
     parser.add_argument("--course-id", type=int, help="Canvas course ID (optional)")
-    parser.add_argument("--config", type=str, help="Configuration YAML file")
+    parser.add_argument("--config", type=str, help="Configuration YAML file (optional with --auto-config)")
     parser.add_argument("--include-inactive", action="store_true", help="Include inactive enrollments")
     parser.add_argument("--output-dir", type=str, help="Output directory for reports (default: {course}-{date})")
     parser.add_argument("--include-ungraded", action="store_true", 
                        help="Include ungraded assignments (default: only count graded work)")
     parser.add_argument("--no-cache", action="store_true", help="Skip cache, always download fresh from Canvas")
+    parser.add_argument("--auto-config", action="store_true",
+                       help="Auto-detect configuration from Canvas (no YAML needed)")
+    parser.add_argument("--generate-config", action="store_true",
+                       help="Generate config file and exit (shortcut for generate_config.py)")
     args = parser.parse_args()
 
     # Load configuration
     if args.config:
         config_data = load_config(args.config)
+    elif args.auto_config:
+        # Auto-detect mode: use Canvas with auto-detected drop rules
+        print("Auto-config mode: detecting configuration from Canvas...")
+        config_data = {
+            "use_canvas_groups": True,
+            "drop_lowest": {},  # Will be auto-detected from Canvas rules
+            "auto_detect_drop_rules": True,
+        }
     else:
-        # Default: use Canvas assignment groups
-        print("Warning: No config file specified, will use Canvas assignment group weights")
+        # Default: use Canvas assignment groups with no drop rules
+        print("No config file specified. Using Canvas assignment groups with no drop rules.")
+        print("Tip: Use --auto-config to auto-detect drop rules from Canvas")
+        print("     Or use --generate-config to create a config file")
         config_data = {
             "use_canvas_groups": True,
             "drop_lowest": {},
         }
+
+    # Handle --generate-config shortcut
+    if args.generate_config:
+        import subprocess
+        cmd = ["python3", "generate_config.py"]
+        if args.course_id:
+            cmd.extend(["--course-id", str(args.course_id)])
+        cmd.append("--interactive")
+        subprocess.run(cmd)
+        return 0
 
     # Connect to Canvas to get course info
     print("Connecting to Canvas...")
@@ -243,9 +267,34 @@ def main():
         
         assignment_groups = list(canvas_course.get_assignment_groups())
         print(f"Found {len(assignment_groups)} assignment groups:")
-        for g in assignment_groups:
-            weight = getattr(g, 'group_weight', 0)
-            print(f"  - {g.name}: {weight}%")
+        
+        # Auto-detect drop rules from Canvas if requested
+        auto_detect_drops = config_data.get('auto_detect_drop_rules', False)
+        if auto_detect_drops:
+            print("\nAuto-detecting drop rules from Canvas...")
+            canvas_drops_found = False
+            for g in assignment_groups:
+                weight = getattr(g, 'group_weight', 0)
+                rules = getattr(g, 'rules', {})
+                canvas_drop = rules.get('drop_lowest', 0) if rules else 0
+                
+                print(f"  - {g.name}: {weight}%", end="")
+                
+                if canvas_drop > 0:
+                    print(f" (Canvas drop_lowest: {canvas_drop})")
+                    config_data['drop_lowest'][g.name] = canvas_drop
+                    canvas_drops_found = True
+                else:
+                    print()
+            
+            if not canvas_drops_found:
+                print("\n  No drop rules found in Canvas.")
+                print("  Tip: Configure drop rules in Canvas Assignment Group settings")
+                print("       or create a config YAML file with drop_lowest values.")
+        else:
+            for g in assignment_groups:
+                weight = getattr(g, 'group_weight', 0)
+                print(f"  - {g.name}: {weight}%")
         
         # Create processor with Canvas groups
         processor = GradeProcessor(
