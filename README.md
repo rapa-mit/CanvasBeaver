@@ -222,6 +222,20 @@ Create your own YAML file:
 
 ### Core Documentation
 
+- **[CONFIGURATION_GUIDE.md](CONFIGURATION_GUIDE.md)** - **Configuration guide** (recommended):
+  - Three configuration modes (auto, generate, manual)
+  - Canvas drop rules support
+  - Letter grade scales
+  - Troubleshooting and best practices
+  - Complete examples
+
+- **[CANVAS_API_GUIDE.md](CANVAS_API_GUIDE.md)** - **Canvas API programming guide**:
+  - Create and configure courses programmatically
+  - Set up assignment groups with weights and drop rules
+  - Create assignments and manage grading
+  - Enroll users and manage roster
+  - Complete code examples and best practices
+
 - **[GRADE_PROCESSING.md](GRADE_PROCESSING.md)** - Complete grade processing documentation:
   - Canvas API integration and configuration
   - Weight calculation methods (Canvas groups vs. manual)
@@ -304,16 +318,38 @@ Options:
   --no-cache              Skip cache, download fresh from Canvas
 ```
 
+**`create_course_template.py`** - Canvas API course builder
+```bash
+# Show what it would do (safe dry-run)
+python3 create_course_template.py --dry-run
+
+# Configure existing course
+python3 create_course_template.py --course-id 33045
+
+# Setup assignment groups only
+python3 create_course_template.py --course-id 33045 --setup-groups-only
+
+# Create new course (requires admin)
+python3 create_course_template.py --create-new --account-id 1
+
+Options:
+  --course-id ID          Existing course to configure
+  --create-new            Create new course (requires admin)
+  --account-id ID         Account ID for new course (default: 1)
+  --dry-run               Show what would be done without changes
+  --setup-groups-only     Only setup assignment groups
+```
+
 **`email_grades.py`** - Email distribution script
 ```bash
-./email_grades.py [OPTIONS]
+python3 email_grades.py [OPTIONS]
 
 Options:
   --test-config           Test SMTP configuration
   --dry-run               Show what would be sent without sending
   --test-email EMAIL      Send all emails to this address instead
   --course-id ID          Canvas course ID (interactive if omitted)
-  --reports-dir DIR       Directory with grade reports (default: individual-grades)
+  --reports-dir DIR       Directory with grade reports (default: {course}-{date}/individual-grades)
   --subject SUBJECT       Email subject line
   --from-email EMAIL      Sender email address
   --smtp-server HOST      SMTP server hostname
