@@ -162,7 +162,7 @@ def main():
     parser.add_argument("--course-id", type=int, help="Canvas course ID (optional)")
     parser.add_argument("--config", type=str, help="Configuration YAML file")
     parser.add_argument("--include-inactive", action="store_true", help="Include inactive enrollments")
-    parser.add_argument("--output-dir", type=str, default=".", help="Output directory for reports")
+    parser.add_argument("--output-dir", type=str, help="Output directory for reports (default: {course}-{date})")
     parser.add_argument("--include-ungraded", action="store_true", 
                        help="Include ungraded assignments (default: only count graded work)")
     parser.add_argument("--no-cache", action="store_true", help="Skip cache, always download fresh from Canvas")
@@ -184,6 +184,7 @@ def main():
     conn = CanvasConnection()
     course = Course.from_args(conn, args.course_id)
     course_id = course.course_id
+    course_code = course.course_code  # e.g., "16.001"
     
     # Find latest cache file for this course
     from pathlib import Path
@@ -291,9 +292,17 @@ def main():
     print_grade_list(processor, sort_by='name')
     print_grade_list(processor, sort_by='grade')
 
-    # Generate reports
-    output_dir = Path(args.output_dir)
+    # Determine output directory
+    if args.output_dir:
+        output_dir = Path(args.output_dir)
+    else:
+        # Create directory with format {course}-{date}
+        from datetime import datetime
+        today = datetime.now().strftime("%Y-%m-%d")
+        output_dir = Path(f"{course_code}-{today}")
+    
     output_dir.mkdir(exist_ok=True)
+    print(f"\nOutput directory: {output_dir}")
 
     print("\nGenerating reports...")
     save_csv_report(processor, str(output_dir / 'grades_summary.csv'))

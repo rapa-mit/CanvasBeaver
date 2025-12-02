@@ -60,6 +60,11 @@ class Course:
         """Get the course name."""
         return getattr(self.canvas_course, 'name', f'Course {self.course_id}')
 
+    @property
+    def course_code(self) -> str:
+        """Get the course code."""
+        return getattr(self.canvas_course, 'course_code', str(self.course_id))
+
     def get_assignments(self) -> list:
         """Get all assignments for this course."""
         return list(self.canvas_course.get_assignments())

@@ -410,8 +410,8 @@ This was sent at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 def main():
     parser = argparse.ArgumentParser(description="Email individual grade reports to students")
     parser.add_argument("--course-id", type=int, help="Canvas course ID (optional)")
-    parser.add_argument("--reports-dir", type=str, default="individual-grades",
-                       help="Directory containing individual grade report files")
+    parser.add_argument("--reports-dir", type=str,
+                       help="Directory containing individual grade report files (default: {course}-{date}/individual-grades)")
     parser.add_argument("--subject", type=str,
                        default=CONFIG.get('EMAIL_SUBJECT', 'Your Course Grade Report'),
                        help="Email subject line")
@@ -473,6 +473,7 @@ def main():
     conn = CanvasConnection()
     course = Course.from_args(conn, args.course_id)
     course_id = course.course_id
+    course_code = course.course_code
 
     # Find latest cache file for this course
     import glob
@@ -505,7 +506,14 @@ def main():
         gb.save_to_cache(cache_file)
 
     students = gb.get_students()
-    reports_dir = Path(args.reports_dir)
+    
+    # Determine reports directory
+    if args.reports_dir:
+        reports_dir = Path(args.reports_dir)
+    else:
+        # Default: look in {course}-{date}/individual-grades
+        today = datetime.now().strftime("%Y-%m-%d")
+        reports_dir = Path(f"{course_code}-{today}") / "individual-grades"
 
     if not reports_dir.exists():
         print(f"ERROR: Reports directory not found: {reports_dir}")

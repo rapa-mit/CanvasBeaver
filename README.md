@@ -16,6 +16,10 @@ This toolkit provides a complete grade management system:
 
 ## Installation
 
+**Requirements:**
+- Python 3.7 or higher
+- Works on Windows, macOS, and Linux
+
 ```bash
 # Clone the repository
 git clone git@github.com:rapa-mit/CanvasBeaver.git
@@ -89,37 +93,42 @@ python3 process_grades.py --config grade_config_canvas.yaml --no-cache
 - `--course-id ID` - Canvas course ID (interactive if not specified)
 - `--include-ungraded` - Include ungraded assignments (default: only graded)
 - `--include-inactive` - Include inactive student enrollments
-- `--output-dir DIR` - Output directory (default: current directory)
+- `--output-dir DIR` - Output directory (default: `{course}-{date}`)
 - `--no-cache` - Skip cache, download fresh from Canvas
 
 **Generates:**
-- Individual text reports (`individual-grades/*.txt`)
-- Individual Excel spreadsheets with formulas (`individual-grades/*.xlsx`)
-- Summary CSV (`grades_summary.csv`)
-- Anomaly report (`anomaly_report.txt`)
+- Individual text reports (`{course}-{date}/individual-grades/*.txt`)
+- Individual Excel spreadsheets with formulas (`{course}-{date}/individual-grades/*.xlsx`)
+- Summary CSV (`{course}-{date}/grades_summary.csv`)
+- Anomaly report (`{course}-{date}/anomaly_report.txt`)
 
 ### 3. Email Grades to Students
 ```bash
 # Test email configuration first
-./email_grades.py --test-config
+python3 email_grades.py --test-config
 
 # Preview what will be sent (dry run)
-./email_grades.py --dry-run
+python3 email_grades.py --dry-run
 
 # Send to yourself to verify
-./email_grades.py --test-email your@email.com
+python3 email_grades.py --test-email your@email.com
 
-# Send to all students
-./email_grades.py
+# Send to all students (automatically finds reports in {course}-{date}/individual-grades)
+python3 email_grades.py
 
 # Specify course ID explicitly
-./email_grades.py --course-id XXXXX
+python3 email_grades.py --course-id XXXXX
+
+# Use custom reports directory
+python3 email_grades.py --reports-dir ./custom-reports/individual-grades
 ```
 
 **Note:** The script will prompt you for:
 - Course selection (if not specified with `--course-id`)
 - SMTP password (cached securely after first use)
 - Confirmation before sending
+
+By default, `email_grades.py` automatically looks for reports in `{course}-{date}/individual-grades`.
 
 ## Key Features
 
