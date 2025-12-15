@@ -2,6 +2,20 @@
 
 This guide explains how to use Canvas Beaver's sophisticated grade processing system that replaces CSV-based workflows with direct Canvas API queries.
 
+## ⚠️ IMPORTANT: Always Use --config Flag!
+
+**Without the --config flag, drop_lowest rules will NOT be applied!**
+
+```bash
+# ❌ WRONG - No drops will be applied
+python3 process_grades.py --course-id 33045
+
+# ✅ CORRECT - Drops will be applied
+python3 process_grades.py --config grade_config_canvas.yaml --course-id 33045
+```
+
+If your grade reports don't show "** Lowest grade dropped" messages, you forgot the `--config` flag.
+
 ## Quick Start
 
 1. **Create a configuration file** (e.g., `my_course_config.yaml`):
