@@ -129,6 +129,7 @@ python3 process_grades.py --config grade_config_canvas.yaml --no-cache
 - `--include-inactive` - Include inactive student enrollments
 - `--output-dir DIR` - Output directory (default: `{course}-{date}`)
 - `--no-cache` - Skip cache, download fresh from Canvas
+- `--modified-grade-scale FILE` - Use alternative letter grade scale (see [MODIFIED_GRADE_SCALE.md](MODIFIED_GRADE_SCALE.md))
 
 **Generates:**
 - Individual text reports (`{course}-{date}/individual-grades/*.txt`)
@@ -147,11 +148,17 @@ python3 email_grades.py --dry-run
 # Send to yourself to verify
 python3 email_grades.py --test-email your@email.com
 
-# Send to all students (automatically finds reports in {course}-{date}/individual-grades)
+# Send to all students (mid-semester) - asks for confirmation before each email
 python3 email_grades.py
 
+# Send final grades (end of semester)
+python3 email_grades.py --final-grades
+
+# Send without individual confirmations (batch mode)
+python3 email_grades.py --final-grades --no-confirm
+
 # Specify course ID explicitly
-python3 email_grades.py --course-id XXXXX
+python3 email_grades.py --course-id XXXXX --final-grades
 
 # Use custom reports directory
 python3 email_grades.py --reports-dir ./custom-reports/individual-grades
@@ -247,6 +254,11 @@ Create your own YAML file:
   
 - **[PARTIAL_GRADING_GUIDE.md](PARTIAL_GRADING_GUIDE.md)** - Mid-semester grading:
   - How partial semester grading works
+
+- **[MODIFIED_GRADE_SCALE.md](MODIFIED_GRADE_SCALE.md)** - Modified letter grade scales:
+  - Using alternative grading scales
+  - Comparing different grading policies
+  - Side-by-side grade display in all reports
   - Weight normalization explained with examples
   - Configuration for graded-only assignments
   - Interpreting normalized vs. raw grades
@@ -255,11 +267,25 @@ Create your own YAML file:
 - **[EMAIL_SETUP.md](EMAIL_SETUP.md)** - Email distribution system:
   - SMTP configuration for different providers (Gmail, MIT, custom)
   - Password caching with secure storage
+  - Interactive confirmation mode (ask before each email)
+  - Batch mode with `--no-confirm` flag
   - Email body format and customization
   - Excel attachment handling
   - Testing modes (dry-run, test-email)
   - Troubleshooting common issues
   - Security best practices
+
+- **[EMAIL_INTERACTIVE_GUIDE.md](EMAIL_INTERACTIVE_GUIDE.md)** - Interactive email confirmation:
+  - How interactive confirmation works
+  - Available options (yes/no/quit/preview/all)
+  - Example workflows and use cases
+  - When to use batch mode vs interactive mode
+
+- **[FINAL_GRADES_MESSAGE.md](FINAL_GRADES_MESSAGE.md)** - Final grades email message:
+  - Using `--final-grades` flag for end-of-semester
+  - Comparison of mid-semester vs final messages
+  - When to use each message type
+  - Complete workflow examples
 
 ### Technical Documentation
 - **[CACHING_FEATURE.md](CACHING_FEATURE.md)** - Gradebook caching:

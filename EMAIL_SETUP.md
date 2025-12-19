@@ -143,10 +143,50 @@ python3 email_grades.py --course-id 33045 --test-email your.email@example.com
 
 Sends all emails to the specified test address instead of to students. Great for testing the actual email delivery and formatting.
 
+### Interactive Confirmation (Default)
+
+**By default, the script will ask for confirmation before sending each email:**
+
+```bash
+python3 email_grades.py --course-id 33045
+```
+
+For each student, you'll be prompted with options:
+- **`[y]es`** - Send email to this student (or just press Enter)
+- **`[n]o`** - Skip this student
+- **`[q]uit`** - Stop sending and skip all remaining students
+- **`[p]review`** - Show preview of email content
+- **`[a]ll`** - Send to this and all remaining students without further prompts
+
+### No Confirmation Mode
+
+To send all emails without individual confirmation prompts:
+
+```bash
+python3 email_grades.py --course-id 33045 --no-confirm
+```
+
+This is useful for batch processing when you've already verified everything is correct.
+
+### Final Grades Message
+
+**By default, emails include a disclaimer that grades are based on work completed so far.**
+
+For end-of-semester final grades, use the `--final-grades` flag:
+
+```bash
+python3 email_grades.py --course-id 33045 --final-grades
+```
+
+This changes the email to:
+- State these are "final grades" instead of "current standing"
+- Remove the mid-semester disclaimer
+- Include a thank you message for the semester
+
 ### Custom Subject Line
 
 ```bash
-python3 email_grades.py --course-id 33045 --subject "Midterm Grade Report"
+python3 email_grades.py --course-id 33045 --subject "Final Grade Report"
 ```
 
 ### Command Line Options (Override CONFIG)
@@ -191,39 +231,100 @@ Recommended workflow for sending grade emails:
    ```
 
 6. **Send to all students** when ready:
+   
+   **For mid-semester progress reports:**
    ```bash
    python3 email_grades.py --course-id 33045
    ```
+   
+   **For end-of-semester final grades:**
+   ```bash
+   python3 email_grades.py --course-id 33045 --final-grades
+   ```
+   
    The script will offer to test your configuration one more time before sending.
+   
+   **By default, you'll be asked to confirm each email individually**, allowing you to:
+   - Skip problematic students
+   - Preview emails before sending
+   - Stop at any point if something looks wrong
+   
+   To skip individual confirmations and send to everyone at once:
+   ```bash
+   python3 email_grades.py --course-id 33045 --final-grades --no-confirm
+   ```
 
 ## Features
 
 - **Email configuration testing**: Test SMTP settings before sending to students
 - **Automatic email retrieval**: Gets student emails from Canvas API
 - **Caching support**: Uses cached gradebook data to avoid repeated API calls
-- **Attachment**: Attaches individual grade report (.txt file) to each email
+- **Dual attachments**: Attaches both text report and Excel spreadsheet to each email
+- **Inlined reports**: Full text report included in email body
+- **Interactive confirmation**: Prompts for each student with preview option (default)
+- **Batch mode**: Use `--no-confirm` to send all without individual prompts
 - **Error handling**: Continues sending even if some emails fail
 - **Summary report**: Shows success/failure statistics at the end
 - **Safe testing**: Dry-run and test modes prevent accidental sends
-- **Interactive confirmation**: Prompts before sending actual emails
+- **Password caching**: Securely caches SMTP password to avoid re-entering
 
-## Email Body Template
+## Email Body Templates
 
-The default email body is:
+### Mid-Semester Message (Default)
+
+The default email includes a disclaimer that these are progress grades:
 
 ```
 Dear [Student Name],
 
-Please find attached your individual grade report for [Course Name].
+Here is your individual grade report for [Course Name].
 
-This report shows your current standing based on graded assignments completed so far this semester.
+This report shows your current standing based on graded assignments 
+completed so far this semester.
+
+[Excel attachment details if available]
 
 If you have any questions about your grades, please don't hesitate to reach out.
 
 Best regards
+
+────────────────────────
+IMPORTANT DISCLAIMER:
+
+This is just for the purpose of giving you an idea of how to compute 
+your grade based on the work done so far. The percentage and letter 
+grade is not a predictor of your final course grade, as it's missing 
+a large part of the grade (final 35%, and several ungraded or 
+unassigned psets, labs and quizlets). The computation of your current 
+grade is done by normalizing the scores you have obtained with the 
+maximum score possible in all the work graded so far.
+────────────────────────
 ```
 
-To customize the email body, edit the `body` variable in the `main()` function of `email_grades.py`.
+### Final Grades Message (--final-grades)
+
+For end-of-semester final grades, use `--final-grades` flag:
+
+```
+Dear [Student Name],
+
+Here is your final grade report for [Course Name].
+
+This report shows your final course grade based on all graded 
+assignments completed this semester.
+
+[Excel attachment details if available]
+
+These are your official final grades for the course. If you have any 
+questions about your final grade calculation, please don't hesitate 
+to reach out.
+
+Thank you for your hard work this semester!
+
+Best regards
+```
+
+To further customize the email body, edit the message templates in the `main()` function of `email_grades.py`.
 
 ## Troubleshooting
 
