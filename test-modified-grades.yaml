@@ -1,0 +1,25 @@
+# Test Modified Letter Grade Scale
+# ================================
+# 
+# A test modified grading scale with slightly different thresholds
+# to demonstrate the modified grading feature.
+#
+# Format: Each entry is "threshold: letter_grade"
+# Thresholds should be in ascending order and represent percentages (0.0-1.0)
+
+scale:
+  0.00: F      # Below 65%
+  0.65: D      # 65-72%
+  0.72: C-     # 72-75%
+  0.75: C      # 75-78%
+  0.78: C+     # 78-82%
+  0.82: B-     # 82-85%
+  0.85: B      # 85-88%
+  0.88: B+     # 88-91%
+  0.91: A-     # 91-95%
+  0.95: A      # 95-98%
+  0.98: A+     # 98%+
+
+# Notes:
+# - This is a slightly more lenient scale than strict-letter-grades.yaml
+# - Used for testing the modified grade feature
