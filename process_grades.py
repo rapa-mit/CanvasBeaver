@@ -81,7 +81,13 @@ def save_csv_report(processor: GradeProcessor, filename: str = 'grades_summary.c
         for type_name in students[0].grade_types.keys():
             fieldnames.append(type_name)
     
-    fieldnames.extend(['Total %', 'Letter Grade', 'Alerts'])
+    # Check if we have modified grades
+    has_modified = any(hasattr(s, 'modified_letter_grade') and s.modified_letter_grade for s in students)
+    
+    if has_modified:
+        fieldnames.extend(['Total %', 'Letter Grade', 'Modified Letter Grade', 'Alerts'])
+    else:
+        fieldnames.extend(['Total %', 'Letter Grade', 'Alerts'])
     
     with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -96,6 +102,9 @@ def save_csv_report(processor: GradeProcessor, filename: str = 'grades_summary.c
                 'Letter Grade': student.letter_grade,
                 'Alerts': 'YES' if student.anomalies else '',
             }
+            
+            if has_modified and hasattr(student, 'modified_letter_grade'):
+                row['Modified Letter Grade'] = student.modified_letter_grade
             
             # Add grade type percentages
             for type_name, result in student.grade_types.items():
@@ -148,13 +157,24 @@ def print_grade_list(processor: GradeProcessor, sort_by: str = 'name') -> None:
     """Print formatted list of grades."""
     students = processor.get_sorted_students(by=sort_by)
     
-    print(f"\n{'='*70}")
-    print(f"FINAL GRADES (sorted by {sort_by})")
-    print(f"{'='*70}")
+    # Check if we have modified grades
+    has_modified = any(hasattr(s, 'modified_letter_grade') and s.modified_letter_grade for s in students)
     
-    for student in students:
-        alert = " ⚠" if student.anomalies else ""
-        print(f"{student.name:40s} {student.normalized_percentage*100:6.2f}% = {student.letter_grade:3s}{alert}")
+    print(f"\n{'='*80}")
+    print(f"FINAL GRADES (sorted by {sort_by})")
+    print(f"{'='*80}")
+    
+    if has_modified:
+        print(f"{'Name':40s} {'Score':>7s}  {'Grade':>5s}  {'Modified':>8s}  {'Alert':>5s}")
+        print("-" * 80)
+        for student in students:
+            alert = "⚠" if student.anomalies else ""
+            mod_grade = student.modified_letter_grade if hasattr(student, 'modified_letter_grade') else ""
+            print(f"{student.name:40s} {student.normalized_percentage*100:6.2f}%  {student.letter_grade:>5s}  {mod_grade:>8s}  {alert:>5s}")
+    else:
+        for student in students:
+            alert = " ⚠" if student.anomalies else ""
+            print(f"{student.name:40s} {student.normalized_percentage*100:6.2f}% = {student.letter_grade:3s}{alert}")
 
 
 def main():
@@ -170,6 +190,8 @@ def main():
                        help="Auto-detect configuration from Canvas (no YAML needed)")
     parser.add_argument("--generate-config", action="store_true",
                        help="Generate config file and exit (shortcut for generate_config.py)")
+    parser.add_argument("--modified-grade-scale", type=str, 
+                       help="Path to modified letter grade scale YAML file for alternative grading")
     args = parser.parse_args()
 
     # Load configuration
@@ -250,6 +272,9 @@ def main():
 
     # Get letter grade scale (optional)
     letter_grade_scale = config_data.get('letter_grade_scale', None)
+    
+    # Get modified letter grade scale if specified
+    modified_grade_scale = args.modified_grade_scale if hasattr(args, 'modified_grade_scale') else None
 
     # Determine if we use Canvas groups or manual configuration
     use_canvas_groups = config_data.get('use_canvas_groups', True)
@@ -301,6 +326,7 @@ def main():
             gradebook=gb,
             assignment_groups=assignment_groups,
             letter_grade_scale=letter_grade_scale,
+            modified_grade_scale=modified_grade_scale,
         )
     else:
         # Use manual configuration (legacy mode)
@@ -315,6 +341,7 @@ def main():
             gradebook=gb,
             grade_config=grade_config,
             letter_grade_scale=letter_grade_scale,
+            modified_grade_scale=modified_grade_scale,
         )
 
     # Process grades
