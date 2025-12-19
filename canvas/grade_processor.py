@@ -181,6 +181,7 @@ class ProcessedStudent:
     final_percentage: float = 0.0
     normalized_percentage: float = 0.0
     letter_grade: str = 'F'
+    modified_letter_grade: Optional[str] = None  # Alternative letter grade with modified scale
     anomalies: List[str] = field(default_factory=list)
     weight_normalization_factor: float = 1.0  # Track normalization for reporting
 
@@ -202,10 +203,16 @@ class ProcessedStudent:
         
         if partial_semester:
             # Show current grade based on graded work
-            s += f"CURRENT GRADE (on graded work): {self.normalized_percentage*100:.2f}% = {self.letter_grade}\n"
+            s += f"CURRENT GRADE (on graded work): {self.normalized_percentage*100:.2f}%\n"
+            s += f"LETTER GRADE ACCORDING TO COURSE GRADING SCHEME: {self.letter_grade}\n"
+            if self.modified_letter_grade:
+                s += f"LETTER GRADE SUBMITTED TO REGISTRAR ACCORDING TO MODIFIED CUTOFFS: {self.modified_letter_grade}\n"
             s += f"(Graded categories worth {self.weight_normalization_factor*100:.0f}% of course, normalized to 100%)\n"
         else:
-            s += f"OVERALL GRADE: {self.normalized_percentage*100:.2f}% = {self.letter_grade}\n"
+            s += f"OVERALL GRADE: {self.normalized_percentage*100:.2f}%\n"
+            s += f"LETTER GRADE ACCORDING TO COURSE GRADING SCHEME: {self.letter_grade}\n"
+            if self.modified_letter_grade:
+                s += f"LETTER GRADE SUBMITTED TO REGISTRAR ACCORDING TO MODIFIED CUTOFFS: {self.modified_letter_grade}\n"
         
         s += f"{line}\n\n"
 
@@ -261,6 +268,7 @@ class GradeProcessor:
         grade_config: Optional[GradeConfiguration] = None,
         assignment_groups: Optional[List[Any]] = None,
         letter_grade_scale: Optional[Union[str, Path, Dict[float, str]]] = None,
+        modified_grade_scale: Optional[Union[str, Path, Dict[float, str]]] = None,
     ):
         """Initialize grade processor.
 
@@ -269,6 +277,7 @@ class GradeProcessor:
             grade_config: Optional grade configuration with weights (if not using Canvas groups)
             assignment_groups: Optional list of Canvas assignment groups with weights
             letter_grade_scale: Optional path to letter grade YAML file or dict of scale
+            modified_grade_scale: Optional path to modified letter grade YAML file or dict of scale
             
         Note: Either grade_config OR assignment_groups should be provided.
               If assignment_groups is provided, weights are read from Canvas.
@@ -283,6 +292,14 @@ class GradeProcessor:
             self.letter_grade_scale = letter_grade_scale
         else:
             self.letter_grade_scale = load_letter_grade_scale(letter_grade_scale)
+        
+        # Load modified letter grade scale
+        if modified_grade_scale is None:
+            self.modified_grade_scale = None
+        elif isinstance(modified_grade_scale, dict):
+            self.modified_grade_scale = modified_grade_scale
+        else:
+            self.modified_grade_scale = load_letter_grade_scale(modified_grade_scale)
 
         # Build configuration from Canvas assignment groups or use provided config
         if assignment_groups is not None:
@@ -523,6 +540,13 @@ class GradeProcessor:
             processed.normalized_percentage,
             scale=self.letter_grade_scale
         )
+        
+        # Compute modified letter grade if modified scale is provided
+        if self.modified_grade_scale:
+            processed.modified_letter_grade = letter_grade(
+                processed.normalized_percentage,
+                scale=self.modified_grade_scale
+            )
 
         return processed
 
@@ -940,15 +964,31 @@ class GradeProcessor:
         # Add letter grade with VLOOKUP to conversion table
         ws[f'E{grade_summary_row}'] = f'=VLOOKUP(D{grade_summary_row},Grades!A:B,2,TRUE)'
         
+        # Add modified letter grade if modified scale is provided
+        if self.modified_grade_scale:
+            ws[f'F{grade_summary_row}'] = "Modified Grade:"
+            ws[f'F{grade_summary_row}'].font = Font(bold=True, size=12)
+            ws[f'F{grade_summary_row}'].fill = subheader_fill
+            ws[f'G{grade_summary_row}'] = f'=VLOOKUP(D{grade_summary_row},ModifiedGrades!A:B,2,TRUE)'
+            ws[f'G{grade_summary_row}'].font = Font(bold=True, size=12)
+            ws[f'G{grade_summary_row}'].fill = subheader_fill
+        
         # Set column widths
         ws.column_dimensions['A'].width = 40
         ws.column_dimensions['B'].width = 12
         ws.column_dimensions['C'].width = 12
         ws.column_dimensions['D'].width = 15
         ws.column_dimensions['E'].width = 15
+        if self.modified_grade_scale:
+            ws.column_dimensions['F'].width = 18
+            ws.column_dimensions['G'].width = 15
         
         # Create letter grade conversion sheet
         self._add_grade_conversion_sheet(wb)
+        
+        # Create modified grade conversion sheet if provided
+        if self.modified_grade_scale:
+            self._add_modified_grade_conversion_sheet(wb)
         
         # Save workbook
         wb.save(filename)
@@ -989,6 +1029,38 @@ class GradeProcessor:
         
         # IMPORTANT: Sort by percentage ASCENDING for VLOOKUP with TRUE (approximate match)
         # VLOOKUP with TRUE requires data sorted in ascending order
+        sorted_thresholds = sorted(scale.items(), reverse=False)
+        
+        row = 2
+        for threshold, letter in sorted_thresholds:
+            ws[f'A{row}'] = threshold  # Store as decimal (0.93 for 93%)
+            ws[f'A{row}'].number_format = '0.00%'
+            ws[f'B{row}'] = letter
+            row += 1
+        
+        # Set column widths
+        ws.column_dimensions['A'].width = 18
+        ws.column_dimensions['B'].width = 15
+    
+    def _add_modified_grade_conversion_sheet(self, wb: Workbook) -> None:
+        """Add a sheet with modified letter grade conversion table.
+        
+        Args:
+            wb: Workbook to add the sheet to
+        """
+        # Create new sheet
+        ws = wb.create_sheet("ModifiedGrades")
+        
+        # Use the modified grade scale
+        scale = self.modified_grade_scale
+        
+        # Header
+        ws['A1'] = "Min Percentage"
+        ws['B1'] = "Letter Grade"
+        ws['A1'].font = Font(bold=True)
+        ws['B1'].font = Font(bold=True)
+        
+        # Sort by percentage ASCENDING for VLOOKUP with TRUE (approximate match)
         sorted_thresholds = sorted(scale.items(), reverse=False)
         
         row = 2
