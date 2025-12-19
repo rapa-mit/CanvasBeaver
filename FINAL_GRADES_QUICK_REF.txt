@@ -1,0 +1,71 @@
+FINAL GRADES EMAIL - QUICK REFERENCE
+=====================================
+
+WHAT IT DOES:
+Adds --final-grades flag to switch email message from mid-semester 
+progress report to end-of-semester final grades.
+
+USAGE:
+------
+# Mid-semester (default):
+python3 email_grades.py --course-id 33045
+
+# Final grades (end of semester):
+python3 email_grades.py --course-id 33045 --final-grades
+
+KEY DIFFERENCES:
+----------------
+Mid-Semester:
+  ✓ "current standing based on work completed so far"
+  ✓ Long disclaimer about normalization
+  ✓ "not a predictor of final course grade"
+  ✓ Progress report tone
+
+Final Grades:
+  ✓ "final course grade based on all graded assignments"
+  ✓ NO disclaimer
+  ✓ "official final grades for the course"
+  ✓ Thank you message added
+  ✓ Final/complete tone
+
+WORKFLOW FOR FINAL GRADES:
+---------------------------
+1. Process grades (all assignments):
+   python3 process_grades.py --config grade_config_canvas.yaml --include-ungraded
+
+2. Test to yourself:
+   python3 email_grades.py --course-id 33045 --final-grades --test-email you@mit.edu
+
+3. Send to all:
+   python3 email_grades.py --course-id 33045 --final-grades
+
+COMMON COMBINATIONS:
+--------------------
+# Batch send finals without confirmation:
+python3 email_grades.py --course-id 33045 --final-grades --no-confirm
+
+# Test finals message:
+python3 email_grades.py --course-id 33045 --final-grades --dry-run
+
+# Finals with custom subject:
+python3 email_grades.py --course-id 33045 --final-grades --subject "Final Grades"
+
+WHEN TO USE:
+------------
+Use --final-grades when:
+  • Semester is complete
+  • All assignments graded
+  • Grades are official/final
+  • No more work can be submitted
+
+Use default (no flag) when:
+  • Mid-semester progress reports
+  • Grades may still change
+  • More work to be completed
+  • Encouraging improvement
+
+DOCUMENTATION:
+--------------
+Full guide: FINAL_GRADES_MESSAGE.md
+Comparison: EMAIL_MESSAGE_COMPARISON.txt
+Setup:      EMAIL_SETUP.md

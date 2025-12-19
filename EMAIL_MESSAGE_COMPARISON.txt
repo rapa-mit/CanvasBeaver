@@ -1,0 +1,105 @@
+EMAIL MESSAGE COMPARISON - Mid-Semester vs Final Grades
+========================================================================
+
+COMMAND:
+--------
+Mid-semester:  python3 email_grades.py --course-id 33045
+Final grades:  python3 email_grades.py --course-id 33045 --final-grades
+
+
+MID-SEMESTER MESSAGE (default):
+------------------------------------------------------------------------
+
+Dear Jane Doe,
+
+Here is your individual grade report for 16.001 Unified Engineering.
+
+This report shows your current standing based on graded assignments 
+completed so far this semester.
+
+I've attached an Excel spreadsheet with your grades. The spreadsheet includes:
+- All your assignment scores organized by category
+- Formulas showing exactly how your grade is calculated
+- A "Grades" sheet with the letter grade conversion scale
+- You can modify scores to see how hypothetical changes would affect your grade
+
+If you have any questions about your grades, please don't hesitate to 
+reach out.
+
+Best regards
+
+────────────────────────
+IMPORTANT DISCLAIMER:
+
+I want to clarify once again that this is just for the purpose of giving 
+you an idea of how to compute your grade based on the work done so far. 
+The percentage and the letter grade is not a predictor of your final 
+course grade, as it's missing a large part of the grade (final 35%, and 
+several ungraded or unassigned psets, labs and quizlets). The computation 
+of your current grade is done by normalizing the scores you have obtained 
+with the maximum score possible in all the work graded so far.
+────────────────────────
+
+======================================================================
+[Student's full grade report would appear here]
+======================================================================
+
+
+FINAL GRADES MESSAGE (--final-grades):
+------------------------------------------------------------------------
+
+Dear Jane Doe,
+
+Here is your final grade report for 16.001 Unified Engineering.
+
+This report shows your final course grade based on all graded 
+assignments completed this semester.
+
+I've attached an Excel spreadsheet with your grades. The spreadsheet includes:
+- All your assignment scores organized by category
+- Formulas showing exactly how your grade is calculated
+- A "Grades" sheet with the letter grade conversion scale
+- Complete breakdown of all work completed during the semester
+
+These are your official final grades for the course. If you have any 
+questions about your final grade calculation, please don't hesitate to 
+reach out.
+
+Thank you for your hard work this semester!
+
+Best regards
+
+======================================================================
+[Student's full grade report would appear here]
+======================================================================
+
+
+KEY DIFFERENCES:
+------------------------------------------------------------------------
+1. Opening:        "individual" → "final"
+2. Description:    "current standing...so far" → "final course grade"
+3. Excel notes:    "hypothetical changes" → "complete breakdown"
+4. Disclaimer:     Long disclaimer → REMOVED
+5. Closing:        Questions only → "official" + thank you
+6. Tone:           Progress/interim → Official/final
+
+
+USAGE EXAMPLES:
+------------------------------------------------------------------------
+
+# Test final grades message to yourself:
+python3 email_grades.py --course-id 33045 --final-grades --test-email you@mit.edu
+
+# Dry run to see what would be sent:
+python3 email_grades.py --course-id 33045 --final-grades --dry-run
+
+# Send final grades with interactive confirmation:
+python3 email_grades.py --course-id 33045 --final-grades
+
+# Send final grades without confirmation (batch):
+python3 email_grades.py --course-id 33045 --final-grades --no-confirm
+
+# Send mid-semester progress report (default):
+python3 email_grades.py --course-id 33045
+
+========================================================================
