@@ -429,6 +429,10 @@ def main():
                        help="Skip cache, always download fresh from Canvas")
     parser.add_argument("--test-config", action="store_true",
                        help="Test email configuration and exit")
+    parser.add_argument("--no-confirm", action="store_true",
+                       help="Don't ask for confirmation before each email")
+    parser.add_argument("--final-grades", action="store_true",
+                       help="Use final grades message (instead of mid-semester message)")
     args = parser.parse_args()
 
     # Load email configuration (CONFIG constant + env vars + command line overrides)
@@ -569,8 +573,14 @@ def main():
     sent_count = 0
     failed_count = 0
     skipped_count = 0
+    user_quit = False
 
-    for student in students:
+    for idx, student in enumerate(students, 1):
+        if user_quit:
+            print(f"SKIP: {student.name} - user cancelled")
+            skipped_count += 1
+            continue
+            
         if not student.email:
             print(f"SKIP: {student.name} - no email address")
             skipped_count += 1
@@ -595,7 +605,38 @@ def main():
         # Check if Excel file exists
         has_excel = excel_file.exists()
 
-        body = f"""Dear {student.name},
+        # Build email body based on whether these are final grades or mid-semester
+        if args.final_grades:
+            # Final grades message
+            body = f"""Dear {student.name},
+
+Here is your final grade report for {course.name}.
+
+This report shows your final course grade based on all graded assignments completed this semester.
+
+"""
+            if has_excel:
+                body += f"""I've attached an Excel spreadsheet with your grades. The spreadsheet includes:
+- All your assignment scores organized by category
+- Formulas showing exactly how your grade is calculated
+- A "Grades" sheet with the letter grade conversion scale
+- Complete breakdown of all work completed during the semester
+
+"""
+
+            body += f"""These are your official final grades for the course. If you have any questions about your final grade calculation, please don't hesitate to reach out.
+
+Thank you for your hard work this semester!
+
+Best regards
+
+{'='*70}
+
+{report_content}
+"""
+        else:
+            # Mid-semester / progress report message
+            body = f"""Dear {student.name},
 
 Here is your individual grade report for {course.name}.
 
@@ -603,8 +644,8 @@ This report shows your current standing based on graded assignments completed so
 
 """
 
-        if has_excel:
-            body += f"""I've attached an Excel spreadsheet with your grades. The spreadsheet includes:
+            if has_excel:
+                body += f"""I've attached an Excel spreadsheet with your grades. The spreadsheet includes:
 - All your assignment scores organized by category
 - Formulas showing exactly how your grade is calculated
 - A "Grades" sheet with the letter grade conversion scale
@@ -612,7 +653,7 @@ This report shows your current standing based on graded assignments completed so
 
 """
 
-        body += f"""If you have any questions about your grades, please don't hesitate to reach out.
+            body += f"""If you have any questions about your grades, please don't hesitate to reach out.
 
 Best regards
 
@@ -627,6 +668,60 @@ I want to clarify once again that this is just for the purpose of giving you an 
 {report_content}
 """
 
+        # Ask for confirmation before sending (unless --no-confirm flag is set)
+        if not args.dry_run and not args.no_confirm:
+            print(f"\n{'='*70}")
+            print(f"Student {idx}/{len(students)}: {student.name}")
+            print(f"{'='*70}")
+            print(f"Email: {to_email}")
+            print(f"Report file: {report_file.name}")
+            if has_excel:
+                print(f"Excel file: {excel_file.name}")
+            else:
+                print(f"Excel file: (not found)")
+            print()
+            
+            while True:
+                response = input("Send email? ([y]es/[n]o/[q]uit/[p]review/[a]ll): ").strip().lower()
+                
+                if response in ('y', 'yes', ''):
+                    # Send this email
+                    break
+                elif response in ('n', 'no', 's', 'skip'):
+                    # Skip this student
+                    print(f"SKIP: {student.name}")
+                    skipped_count += 1
+                    break
+                elif response in ('q', 'quit', 'exit'):
+                    # Quit - skip remaining students
+                    print("Quitting. Remaining students will be skipped.")
+                    user_quit = True
+                    skipped_count += 1
+                    break
+                elif response in ('p', 'preview'):
+                    # Show email preview
+                    print(f"\n{'-'*70}")
+                    print(f"EMAIL PREVIEW")
+                    print(f"{'-'*70}")
+                    print(f"To: {to_email}")
+                    print(f"From: {email_config['from_email']}")
+                    print(f"Subject: {args.subject}")
+                    print(f"\n{body[:500]}...")
+                    print(f"{'-'*70}\n")
+                    continue
+                elif response in ('a', 'all'):
+                    # Send this and all remaining without asking
+                    print("Sending to all remaining students without confirmation...")
+                    args.no_confirm = True
+                    break
+                else:
+                    print("Invalid choice. Please enter 'y', 'n', 'q', 'p', or 'a'")
+                    continue
+            
+            # If user chose to skip or quit, continue to next student
+            if response in ('n', 'no', 's', 'skip') or user_quit:
+                continue
+        
         # Send or simulate
         if args.dry_run:
             print(f"WOULD SEND: {student.name} <{to_email}>")
@@ -635,7 +730,10 @@ I want to clarify once again that this is just for the purpose of giving you an 
                 print(f"  Excel attachment: {excel_file.name}")
             sent_count += 1
         else:
-            print(f"Sending to {student.name} <{to_email}>...", end=" ")
+            if args.no_confirm:
+                print(f"Sending to {student.name} <{to_email}>...", end=" ")
+            else:
+                print(f"Sending...", end=" ")
             success, _ = send_email_with_attachment(
                 to_email=to_email,
                 from_email=email_config['from_email'],
