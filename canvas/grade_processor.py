@@ -175,7 +175,7 @@ class ProcessedStudent:
     user_id: Any
     name: str
     email: Optional[str] = None
-    mit_id: Optional[str] = None
+    mit_id: Optional[str] = None  # 9-digit MIT ID number from Canvas SIS User ID
     
     grade_types: Dict[str, GradeTypeResult] = field(default_factory=dict)
     final_percentage: float = 0.0
@@ -450,7 +450,7 @@ class GradeProcessor:
             user_id=student.id,
             name=student.name or str(student.id),
             email=student.email,
-            mit_id=student.login,  # Assuming login is MIT ID
+            mit_id=student.sis_user_id,  # SIS user ID is the MIT ID number
         )
 
         # Group assignments by type (only graded assignments)

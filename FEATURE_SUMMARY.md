@@ -122,7 +122,7 @@ python3 process_grades.py \
 ```
 Name                        Score  Grade  Modified  Alert
 --------------------------------------------------------
-Amelia Bronhard-Yates      93.39%   A-       A
+Alice Smith                93.39%   A-       A
 ```
 
 ### Text Report
@@ -134,7 +134,7 @@ MODIFIED GRADE (alternative scale): 93.39% = A
 ### CSV
 ```csv
 Name,Email,...,Total %,Letter Grade,Modified Letter Grade,Alerts
-Amelia Bronhard-Yates,aby@MIT.EDU,...,93.39,A-,A,
+Smith Alice,alice@MIT.EDU,...,93.39,A-,A,
 ```
 
 ### Excel

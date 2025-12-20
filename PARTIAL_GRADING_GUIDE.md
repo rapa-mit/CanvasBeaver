@@ -99,7 +99,7 @@ GRADE REPORT (PARTIAL SEMESTER - Based on graded assignments only)
 ======================================================================
 
 Student: Alice Smith
-MIT ID:  alice@mit.edu
+MIT ID:  123456789
 
 ======================================================================
 CURRENT GRADE: 85.50% = B

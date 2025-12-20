@@ -183,32 +183,32 @@ Verified:
 
 ```
 ======================================================================
-Student 1/57: Sreeja Akula
+Student 1/57: Alice Smith
 ======================================================================
-Email: srej@mit.edu
-Report file: Sreeja Akula.txt
-Excel file: Sreeja Akula.xlsx
+Email: alice@mit.edu
+Report file: Alice Smith.txt
+Excel file: Alice Smith.xlsx
 
 Send email? ([y]es/[n]o/[q]uit/[p]review/[a]ll): y
 Sending... ✓ Sent
 
 ======================================================================
-Student 2/57: Emily Aleman Garcia
+Student 2/57: Bob Johnson
 ======================================================================
-Email: ealeman@mit.edu
-Report file: Emily Aleman Garcia.txt
-Excel file: Emily Aleman Garcia.xlsx
+Email: bob@mit.edu
+Report file: Bob Johnson.txt
+Excel file: Bob Johnson.xlsx
 
 Send email? ([y]es/[n]o/[q]uit/[p]review/[a]ll): p
 
 ----------------------------------------------------------------------
 EMAIL PREVIEW
 ----------------------------------------------------------------------
-To: ealeman@mit.edu
-From: rapa@mit.edu
+To: bob@mit.edu
+From: instructor@mit.edu
 Subject: Your Course Grade Report
 
-Dear Emily Aleman Garcia,
+Dear Bob Johnson,
 
 Here is your individual grade report for 16.001 Unified Engin Mtrls & Struct.
 ...
@@ -218,26 +218,26 @@ Send email? ([y]es/[n]o/[q]uit/[p]review/[a]ll): y
 Sending... ✓ Sent
 
 ======================================================================
-Student 3/57: Joseph Alvarez
+Student 3/57: Carol Williams
 ======================================================================
-Email: jotaro@mit.edu
-Report file: Joseph Alvarez.txt
-Excel file: Joseph Alvarez.xlsx
+Email: carol@mit.edu
+Report file: Carol Williams.txt
+Excel file: Carol Williams.xlsx
 
 Send email? ([y]es/[n]o/[q]uit/[p]review/[a]ll): n
-SKIP: Joseph Alvarez
+SKIP: Carol Williams
 
 ======================================================================
-Student 4/57: Braeden Baker
+Student 4/57: David Brown
 ======================================================================
-Email: brayn@mit.edu
-Report file: Braeden Baker.txt
-Excel file: Braeden Baker.xlsx
+Email: david@mit.edu
+Report file: David Brown.txt
+Excel file: David Brown.xlsx
 
 Send email? ([y]es/[n]o/[q]uit/[p]review/[a]ll): a
 Sending to all remaining students without confirmation...
-Sending to Braeden Baker <brayn@mit.edu>... ✓ Sent
-Sending to Edgar Batista <edgarb@mit.edu>... ✓ Sent
+Sending to David Brown <david@mit.edu>... ✓ Sent
+Sending to Emily Davis <emily@mit.edu>... ✓ Sent
 [continues for all remaining...]
 
 ======================================================================

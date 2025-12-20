@@ -23,7 +23,7 @@ OUTPUTS WITH MODIFIED GRADES:
 1. CONSOLE OUTPUT:
    Name                        Score  Grade  Modified  Alert
    --------------------------------------------------------
-   Amelia Bronhard-Yates      93.39%   A-       A
+   Alice Smith                93.39%   A-       A
 
 2. CSV SUMMARY:
    Includes "Modified Letter Grade" column

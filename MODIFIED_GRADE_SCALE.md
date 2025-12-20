@@ -40,9 +40,9 @@ The grade listing shows both the primary and modified letter grades:
 ```
 Name                                       Score  Grade  Modified  Alert
 --------------------------------------------------------------------------------
-Abe Schechinger                           87.89%     B+         B       
-Adeline Vining                            95.66%      A         A       
-Aleksander Garbuz                         97.01%     A+         A       
+Smith Alice                               87.89%     B+         B       
+Johnson Bob                               95.66%      A         A       
+Williams Carol                            97.01%     A+         A       
 ```
 
 ### 2. CSV Summary Report
@@ -51,7 +51,7 @@ The CSV file includes an additional "Modified Letter Grade" column:
 
 ```csv
 Name,Email,MIT ID,...,Total %,Letter Grade,Modified Letter Grade,Alerts
-Abe Schechinger,abeschec@MIT.EDU,abeschec@mit.edu,...,87.89,B+,B,
+Smith Alice,alice@MIT.EDU,123456789,...,87.89,B+,B,
 ```
 
 ### 3. Individual Text Reports

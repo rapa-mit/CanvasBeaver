@@ -5,7 +5,7 @@ Diagnostic script to check which assignments have non-zero scores
 import sys
 
 # Read from the individual grade file to see what's there
-filename = "individual-grades/Abe Schechinger.txt"
+filename = "individual-grades/Student Example.txt"
 
 print("Reading from:", filename)
 print("\nAssignments with 0.00%:")

@@ -15,6 +15,11 @@ grades_summary.csv
 anomaly_report.txt
 grades.html
 test_grade_report.xlsx
+registrar_upload.csv
+
+# Output directories (course-date format)
+16.001-*/
+*.001-*/
 
 # Old/backup files
 *~

@@ -51,6 +51,7 @@ class StudentSummary:
     name: Optional[str] = None
     login: Optional[str] = None
     email: Optional[str] = None
+    sis_user_id: Optional[str] = None  # MIT ID number
     scores: Dict[int, StudentScore] = field(default_factory=dict)  # by assignment_id
     total_score: float = 0.0
     total_points: float = 0.0
@@ -109,7 +110,8 @@ class Gradebook:
                 name = (user.get('name') if isinstance(user, dict) else getattr(user, 'name', None)) if user else None
                 login = (user.get('login_id') if isinstance(user, dict) else getattr(user, 'login_id', None)) if user else None
                 email = (user.get('email') if isinstance(user, dict) else getattr(user, 'email', None)) if user else None
-                self.students[uid] = StudentSummary(id=uid, name=name, login=login, email=email)
+                sis_user_id = (user.get('sis_user_id') if isinstance(user, dict) else getattr(user, 'sis_user_id', None)) if user else None
+                self.students[uid] = StudentSummary(id=uid, name=name, login=login, email=email, sis_user_id=sis_user_id)
         except Exception as e:
             raise RuntimeError(f"Unable to retrieve student enrollments: {e}")
 

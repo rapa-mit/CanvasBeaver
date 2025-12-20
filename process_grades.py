@@ -9,6 +9,7 @@ Process and analyze course grades with advanced features:
 - Anomaly detection
 - Individual and summary reports
 - Partial semester grading (excludes ungraded assignments by default)
+- Registrar upload CSV format
 
 Usage:
   python3 process_grades.py --config CONFIG_FILE [--course-id ID] [options]
@@ -25,6 +26,12 @@ Caching:
 By default, only graded assignments are included in grade calculations.
 This provides accurate "current grade" based on work completed so far.
 Use --include-ungraded to include all assignments (treating ungraded as zeros).
+
+Output Files:
+  - grades_summary.csv: Complete grade breakdown by student
+  - registrar_upload.csv: Registrar format (Last Name, First Name, MIT ID, etc.)
+  - anomaly_report.txt: Students with grade pattern alerts
+  - individual-grades/: Individual student reports (text and Excel)
 """
 from __future__ import annotations
 
@@ -113,6 +120,69 @@ def save_csv_report(processor: GradeProcessor, filename: str = 'grades_summary.c
             writer.writerow(row)
     
     print(f"Saved CSV summary to {filename}")
+
+
+def save_registrar_report(processor: GradeProcessor, course_code: str, filename: str = 'registrar_upload.csv') -> None:
+    """Save grades in registrar upload format.
+    
+    Registrar format requires these columns:
+    - Last Name
+    - First Name
+    - Middle Name
+    - MIT ID
+    - Subject #
+    - Section #
+    - Grade
+    - Units
+    - Comment
+    """
+    import csv
+    
+    students = processor.get_sorted_students(by='name')
+    
+    # Parse names and prepare data, then sort by last name
+    student_data = []
+    for student in students:
+        # Parse name into first/last (middle is typically not available)
+        name_parts = student.name.split()
+        if len(name_parts) >= 2:
+            first_name = name_parts[0]
+            last_name = ' '.join(name_parts[1:])
+        else:
+            first_name = student.name
+            last_name = ''
+        
+        # Use modified grade if available, otherwise use regular letter grade
+        grade = student.modified_letter_grade if hasattr(student, 'modified_letter_grade') and student.modified_letter_grade else student.letter_grade
+        
+        # MIT ID should be the SIS user ID (numeric MIT ID)
+        mit_id = student.mit_id or ''
+        
+        student_data.append({
+            'Last Name': last_name,
+            'First Name': first_name,
+            'Middle Name': '',  # Typically not available in Canvas
+            'MIT ID': mit_id,
+            'Subject #': course_code,
+            'Section #': '',  # Could be added if available
+            'Grade': grade,
+            'Units': '',  # Could be configured if needed
+            'Comment': '',
+        })
+    
+    # Sort by last name, then first name
+    student_data.sort(key=lambda x: (x['Last Name'].lower(), x['First Name'].lower()))
+    
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['Last Name', 'First Name', 'Middle Name', 'MIT ID', 'Subject #', 
+                      'Section #', 'Grade', 'Units', 'Comment']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        
+        for row in student_data:
+            writer.writerow(row)
+    
+    print(f"Saved registrar upload file to {filename}")
 
 
 def save_anomaly_report(processor: GradeProcessor, filename: str = 'anomaly_report.txt') -> None:
@@ -382,6 +452,7 @@ def main():
 
     print("\nGenerating reports...")
     save_csv_report(processor, str(output_dir / 'grades_summary.csv'))
+    save_registrar_report(processor, course_code, str(output_dir / 'registrar_upload.csv'))
     save_anomaly_report(processor, str(output_dir / 'anomaly_report.txt'))
     processor.save_individual_reports(str(output_dir / 'individual-grades'))
 
